@@ -17,4 +17,14 @@ router.post('/products', async (req, res) => {
     }
 })
 
+// Get all products from DB
+router.get('/products', async (req, res) => {
+    try {
+        const products = await Product.find({})
+        res.send(products)
+    } catch (err) {
+        res.status(500).send()
+    }
+})
+
 module.exports = router
