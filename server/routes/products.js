@@ -29,7 +29,7 @@ router.get('/products', async (req, res) => {
 })
 
 //Upload an image
-router.post('/upload', upload.single('test'), async (req, res) => {
+router.post('/upload', upload.single('image'), async (req, res) => {
     try {
         const product = await Product.findOne({_id: req.body.id})
 
