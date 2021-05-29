@@ -30,15 +30,20 @@ router.get('/products', async (req, res) => {
 
 //Upload an image
 router.post('/upload', upload.single('test'), async (req, res) => {
-    const product = await Product.findOne({_id: req.body.id})
+    try {
+        const product = await Product.findOne({_id: req.body.id})
 
-    // Čuvamo samo filename u polju image u product-u, a folder uploads 
-    // je serviran kao static u index.js
-    product.image = req.file.filename
+        // Čuvamo samo filename u polju image u product-u, a folder uploads 
+        // je serviran kao static u index.js
+        product.image = req.file.filename
 
-    await product.save()
+        await product.save()
 
-    res.send(product)
+        res.send(product)
+    } catch (err) {
+        res.status(500).send()
+    }
+    
 }, (error, req, res, next) => {
     res.status(400).send({ error: error.message })
 })
