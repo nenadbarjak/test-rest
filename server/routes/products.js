@@ -1,3 +1,5 @@
+const fs = require('fs')
+const sharp = require('sharp')
 const express = require('express')
 const router = new express.Router()
 
@@ -7,13 +9,22 @@ const Product = require('../models/product')
 // Add a new product to DB
 router.post('/products', upload.single('image'), async (req, res) => {
     try {
+        const { filename: image } = req.file
+
+        await sharp(req.file.path)
+            .resize(286, 180)
+            .toFile('uploads/' + 'rs' + image)
+            .then(info => console.log(info))
+            .catch(err => console.log(err))
+        fs.unlinkSync(req.file.path)
+
         const product = new Product({
             ...req.body,
         })
         if (req.file) {
             // Čuvamo samo filename u polju image u product-u, a folder uploads 
             // je serviran kao static u index.js
-            product.image = req.file.filename
+            product.image = 'rs' + req.file.filename
         }
         
         await product.save()
